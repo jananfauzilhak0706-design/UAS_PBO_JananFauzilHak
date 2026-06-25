@@ -1,26 +1,16 @@
 <?php
-// Panggil berkas induk
 require_once 'Mahasiswa.php';
 
-// SUBCLASS: MahasiswaPrestasi
 class MahasiswaPrestasi extends Mahasiswa {
-    // Properti Tambahan Spesifik Anak
     private $namaInstansiBeasiswa;
     private $minimalIpkSyarat;
 
     public function __construct($dataRow) {
         parent::__construct($dataRow);
-        
-        // Pemetaan atribut spesifik dari kolom database
         $this->namaInstansiBeasiswa = isset($dataRow['nama_instansi_beasiswa']) ? $dataRow['nama_instansi_beasiswa'] : '-';
         $this->minimalIpkSyarat     = isset($dataRow['minimal_ipk_syarat']) ? $dataRow['minimal_ipk_syarat'] : 0.00;
     }
 
-    /**
-     * Metode Query Spesifik untuk Mahasiswa Jalur Prestasi
-     * @param mysqli $db - Objek koneksi database
-     * @return array - Kumpulan objek MahasiswaPrestasi
-     */
     public static function getDaftarPrestasi($db) {
         $query = "SELECT * FROM tabel_mahasiswa WHERE jenis_pembiayaan = 'Prestasi'";
         $result = $db->query($query);
@@ -34,12 +24,13 @@ class MahasiswaPrestasi extends Mahasiswa {
         return $kumpulanObjek;
     }
 
-    // Mengimplementasikan metode abstrak dari kelas induk
+    /**
+     * [Tahap 5] Overriding: Menghitung total tagihan Mahasiswa Prestasi
+     */
     public function hitungTagihanSemester() {
-        return $this->tarifUktNominal;
+        return $this->tarifUktNominal * 0.25;
     }
 
-    // Mengimplementasikan metode abstrak dari kelas induk
     public function tampilkanSpesifikasiAkademik() {
         echo "<strong>— Detail Skema Prestasi —</strong><br>";
         echo "Sponsor Beasiswa : " . $this->namaInstansiBeasiswa . "<br>";
